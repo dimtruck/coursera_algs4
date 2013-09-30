@@ -11,7 +11,7 @@ public class RandomizedQueue<Item> implements Iterable<Item>
    }
    public boolean isEmpty()           // is the queue empty?
    {
-       return size == 0;
+       return queue.length == 0;
    }
    public int size()                  // return the number of items on the queue
    {
@@ -40,6 +40,7 @@ public class RandomizedQueue<Item> implements Iterable<Item>
    }
    public Item sample()               // return (but do not delete) a random item
    {
+       if(isEmpty())  throw new java.util.NoSuchElementException();
        int i = StdRandom.uniform(size);
        return getSample(i);
    }

@@ -10,7 +10,7 @@ public class Deque<Item> implements Iterable<Item> {
    }
    public boolean isEmpty()           // is the deque empty?
    {
-       return first == null;
+       return first == null && last == null;
    }
    public int size()                  // return the number of items on the deque
    {
@@ -29,6 +29,13 @@ public class Deque<Item> implements Iterable<Item> {
        first = new Node();
        first.item = item;
        first.next = oldfirst;
+       first.prev = null;
+       if (last == null) {
+           last = first;
+       }
+       if (oldfirst != null) {
+           oldfirst.prev = first;
+       }
    }
    
    public void addLast(Item item)     // insert the item at the end
@@ -38,8 +45,10 @@ public class Deque<Item> implements Iterable<Item> {
        last = new Node();
        last.item = item;
        last.next = null;
-       if (isEmpty()) first = last;
-       else {
+       if (first == null) {
+           first = last;
+       }
+       if (oldlast != null) {
            oldlast.next = last;
            last.prev = oldlast;
        }
@@ -47,19 +56,20 @@ public class Deque<Item> implements Iterable<Item> {
    
    public Item removeFirst()          // delete and return the item at the front
    {
-       if (first == null) throw new java.lang.NullPointerException();
+       if (first == null) throw new java.util.NoSuchElementException();
        Item item = first.item;
        first = first.next;
        if (first != null) first.prev = null;
-       if (isEmpty()) last = null;
+       if (first == null) last = null;
        return item;
    }
    public Item removeLast()           // delete and return the item at the end
    {
+       if (last == null) throw new java.util.NoSuchElementException();
        Item item = last.item;
        last = last.prev;
        if (last != null) last.next = null;
-       if (isEmpty()) first = null;
+       if (last == null) first = null;
        return item;
    }
    public Iterator<Item> iterator()   // return an iterator over items in order from front to end
@@ -75,6 +85,7 @@ public class Deque<Item> implements Iterable<Item> {
        public void remove() { throw new UnsupportedOperationException(); }
        public Item next()
        {
+           if(current == null)  throw new java.util.NoSuchElementException();
            Item item = current.item;
            current = current.next;
            return item;
